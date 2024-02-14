@@ -57,9 +57,7 @@ public class UnregisteredVehicleCheckScheduler {
 
         String currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmm"));
         String csvFilePath = csvConfig.getCsvFilePath() + "unregistered_plates_report_" + currentDateTime + ".csv";
-
-        try {
-            CSVWriter csvWriter = CsvUtility.getCsvWriter(unregisteredLicencePlateResponseList, csvFilePath);
+        try( CSVWriter csvWriter = CsvUtility.getCsvWriter(unregisteredLicencePlateResponseList, csvFilePath)){
             csvWriter.flush();
             logger.info("CSV report generated successfully. File path: {}", csvFilePath);
         } catch (IOException e) {

@@ -13,7 +13,7 @@ public class CsvUtility {
      * This is a utility method in order to generate the csv.
      * */
     public static CSVWriter getCsvWriter(List<UnregisteredLicencePlateResponse> unregisteredLicencePlateResponseList, String csvFilePath) throws IOException {
-        try (CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(csvFilePath)))) {
+        CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(csvFilePath)));
             String[] header = {"License Plate", "Observation Date", "Street Name"};
             csvWriter.writeNext(header);
 
@@ -27,5 +27,4 @@ public class CsvUtility {
             }
             return csvWriter;
         }
-    }
 }
