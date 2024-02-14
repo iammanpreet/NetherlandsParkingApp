@@ -1,0 +1,7 @@
+csv:
+  report:
+    file-path:
+
+logging:
+  level:
+    com.assignment.parking: INFO
