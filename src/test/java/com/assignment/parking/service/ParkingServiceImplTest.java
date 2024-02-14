@@ -55,7 +55,8 @@ public class ParkingServiceImplTest extends BaseTest {
 
     @Test
     void testUnregisterParkingSession_Success() {
-        UnregisterParkingRequest request = new UnregisterParkingRequest("ABC123");
+        UnregisterParkingRequest request = new UnregisterParkingRequest();
+        request.setLicensePlateNumber("License1");
         ParkingRecord parkingRecord = new ParkingRecord();
         when(parkingRepository.findByLicensePlateNumberAndEndTimeIsNull(anyString())).thenReturn(parkingRecord);
 
@@ -67,7 +68,8 @@ public class ParkingServiceImplTest extends BaseTest {
 
     @Test
     void testUnregisterParkingSession_VehicleNotFound() {
-        UnregisterParkingRequest request = new UnregisterParkingRequest("License1");
+        UnregisterParkingRequest request = new UnregisterParkingRequest();
+        request.setLicensePlateNumber("License1");
         when(parkingRepository.findByLicensePlateNumberAndEndTimeIsNull(anyString())).thenReturn(null);
 
         NotFoundException exception = assertThrows(NotFoundException.class,

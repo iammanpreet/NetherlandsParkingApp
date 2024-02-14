@@ -33,8 +33,8 @@ public class ParkingControllerTest extends BaseTest {
 
     @Test
     public void testUnregisterParkingSession() {
-        UnregisterParkingRequest unregisterParkingRequest = new UnregisterParkingRequest("License1");
-
+        UnregisterParkingRequest unregisterParkingRequest = new UnregisterParkingRequest();
+        unregisterParkingRequest.setLicensePlateNumber("License1");
         ResponseEntity<BaseResponse> responseEntity = parkingController.unregisterParkingSession(unregisterParkingRequest);
         verify(parkingService, times(1)).unregisterParkingSession(unregisterParkingRequest);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
