@@ -34,5 +34,5 @@ The Netherlands Parking System REST API is designed to manage parking sessions, 
     Scheduled Task:
         Runs every 10 minutes to identify unregistered plates and generate reports.
 
-##Health Check:
+## Health Check:
     Actuator url: http://localhost:8080/actuator/health
