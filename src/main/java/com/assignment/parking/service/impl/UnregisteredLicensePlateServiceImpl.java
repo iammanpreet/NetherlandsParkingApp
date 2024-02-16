@@ -1,9 +1,12 @@
 package com.assignment.parking.service.impl;
 
+import com.assignment.parking.exception.NotFoundException;
+import com.assignment.parking.model.Street;
 import com.assignment.parking.model.UnregisteredLicensePlate;
 import com.assignment.parking.model.request.UnregisteredLicencePlateRequest;
 import com.assignment.parking.model.response.UnregisteredLicencePlateResponse;
 import com.assignment.parking.repository.UnregisteredLicensePlateRepository;
+import com.assignment.parking.service.StreetService;
 import com.assignment.parking.service.UnregisteredLicensePlateService;
 
 import org.slf4j.Logger;
@@ -17,23 +20,30 @@ import java.util.Optional;
 @Service
 public class UnregisteredLicensePlateServiceImpl implements UnregisteredLicensePlateService {
     private final UnregisteredLicensePlateRepository unregisteredLicensePlateRepository;
+    private final StreetService streetService;
     private static final Logger logger = LoggerFactory.getLogger(UnregisteredLicensePlateServiceImpl.class);
 
     @Autowired
-    public UnregisteredLicensePlateServiceImpl(UnregisteredLicensePlateRepository unregisteredLicensePlateRepository) {
+    public UnregisteredLicensePlateServiceImpl(UnregisteredLicensePlateRepository unregisteredLicensePlateRepository, StreetService streetService) {
         this.unregisteredLicensePlateRepository = unregisteredLicensePlateRepository;
+        this.streetService = streetService;
     }
 
     public UnregisteredLicencePlateResponse saveUnregisteredLicensePlate(UnregisteredLicencePlateRequest unregisteredLicencePlateRequest) {
+        Optional<Street> street = streetService.getStreetByName(unregisteredLicencePlateRequest.getStreetName());
+        if(street.isEmpty()){
+            logger.error("Street Not found with street name: {} ", unregisteredLicencePlateRequest.getStreetName());
+            throw new NotFoundException("Street not found");
+        }
         UnregisteredLicensePlate unregisteredLicensePlate = new UnregisteredLicensePlate();
         unregisteredLicensePlate.setLicensePlateNumber(unregisteredLicencePlateRequest.getLicensePlateNumber());
-        unregisteredLicensePlate.setStreetName(unregisteredLicencePlateRequest.getStreetName());
+        unregisteredLicensePlate.setStreet(street.get());
         unregisteredLicensePlate.setObservationDate(unregisteredLicencePlateRequest.getObservationDate());
 
         UnregisteredLicensePlate savedUnregisteredLicenseTemplate = unregisteredLicensePlateRepository.save(unregisteredLicensePlate);
         return new UnregisteredLicencePlateResponse(
                 savedUnregisteredLicenseTemplate.getLicensePlateNumber(),
-                savedUnregisteredLicenseTemplate.getStreetName(),
+                savedUnregisteredLicenseTemplate.getStreet().getName(),
                 savedUnregisteredLicenseTemplate.getObservationDate(),
                 savedUnregisteredLicenseTemplate.getUnregisteredId()
         );
@@ -61,7 +71,7 @@ public class UnregisteredLicensePlateServiceImpl implements UnregisteredLicenseP
             for (UnregisteredLicensePlate unregisteredLicensePlate : unregisteredLicensePlateList) {
                 UnregisteredLicencePlateResponse unregisteredLicencePlateResponse = new UnregisteredLicencePlateResponse(
                         unregisteredLicensePlate.getLicensePlateNumber(),
-                        unregisteredLicensePlate.getStreetName(),
+                        unregisteredLicensePlate.getStreet().getName(),
                         unregisteredLicensePlate.getObservationDate(),
                         unregisteredLicensePlate.getUnregisteredId());
                 unregisteredLicencePlateResponseList.add(unregisteredLicencePlateResponse);

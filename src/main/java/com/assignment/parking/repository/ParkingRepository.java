@@ -14,8 +14,8 @@ public interface ParkingRepository extends JpaRepository<ParkingRecord, Long> {
 
     @Query("SELECT pr FROM ParkingRecord pr " +
             "WHERE pr.licensePlateNumber = :licensePlateNumber " +
-            "AND pr.streetName = :streetName " +
+            "AND pr.street.name = :streetName " +
             "AND pr.startTime <= :observationDate " +
             "AND (pr.endTime >= :observationDate or pr.endTime is null)")
-    ParkingRecord findByLicensePlateNumberAndStreetNameAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(@Param("licensePlateNumber") String licensePlateNumber, @Param("streetName") String streetName, @Param("observationDate") LocalDateTime observationDate);
+    ParkingRecord findByLicensePlateNumberAndStreetNameAndStartTimeLessThanEqualAndEndTimeGreaterThanEqualIgnoreCase(@Param("licensePlateNumber") String licensePlateNumber, @Param("streetName") String streetName, @Param("observationDate") LocalDateTime observationDate);
 }

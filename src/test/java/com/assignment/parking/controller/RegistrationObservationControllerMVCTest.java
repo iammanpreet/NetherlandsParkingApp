@@ -17,8 +17,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-@AutoConfigureMockMvc
 @SpringBootTest
+@AutoConfigureMockMvc
 public class RegistrationObservationControllerMVCTest {
 
     @Autowired
@@ -33,7 +33,7 @@ public class RegistrationObservationControllerMVCTest {
     @Test
     void testSaveRegistrationObservations() throws Exception {
         List<RegistrationObservationRequest> observations = Collections.singletonList(
-                new RegistrationObservationRequest("Licens1","Street1", LocalDateTime.now().minusDays(2))
+                new RegistrationObservationRequest("Licens1","Java", LocalDateTime.now().minusDays(2))
         );
         Mockito.doNothing().when(registrationObservationService).saveRegistrationObservations(Mockito.anyList());
         mockMvc.perform(MockMvcRequestBuilders.post("/api/observation/saveRegistrationObservations")

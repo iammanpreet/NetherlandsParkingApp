@@ -19,14 +19,14 @@ public class ParkingRecord {
     /**
      * Street name for the parking spot
      */
-    @Column(name = "street_name", nullable = false)
-    private String streetName;
+    @ManyToOne
+    @JoinColumn(name = "street_id")
+    private Street street;
 
     /**
      * Start time of the parking
      */
     @Column(name = "start_time", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-
     private LocalDateTime startTime;
     /**
      * End time of the parking
@@ -50,12 +50,12 @@ public class ParkingRecord {
         this.licensePlateNumber = licensePlateNumber;
     }
 
-    public String getStreetName() {
-        return streetName;
+    public Street getStreet() {
+        return street;
     }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
+    public void setStreet(Street street) {
+        this.street = street;
     }
 
     public LocalDateTime getStartTime() {

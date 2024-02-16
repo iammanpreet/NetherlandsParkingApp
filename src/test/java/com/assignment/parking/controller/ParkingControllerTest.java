@@ -3,6 +3,7 @@ package com.assignment.parking.controller;
 import com.assignment.parking.BaseTest;
 import com.assignment.parking.model.request.UnregisterParkingRequest;
 import com.assignment.parking.model.response.BaseResponse;
+import com.assignment.parking.model.response.UnregisterParkingResponse;
 import com.assignment.parking.service.ParkingService;
 import com.assignment.parking.model.request.RegisterParkingRequest;
 import org.junit.jupiter.api.Test;
@@ -35,9 +36,13 @@ public class ParkingControllerTest extends BaseTest {
     public void testUnregisterParkingSession() {
         UnregisterParkingRequest unregisterParkingRequest = new UnregisterParkingRequest();
         unregisterParkingRequest.setLicensePlateNumber("License1");
-        ResponseEntity<BaseResponse> responseEntity = parkingController.unregisterParkingSession(unregisterParkingRequest);
+        UnregisterParkingResponse unregisterParkingResponse = new UnregisterParkingResponse();
+        unregisterParkingResponse.setLicensePlateNumber("License1");
+        unregisterParkingResponse.setMessage("Parking session ended successfully");
+        when(parkingService.unregisterParkingSession(unregisterParkingRequest)).thenReturn(unregisterParkingResponse);
+        ResponseEntity<UnregisterParkingResponse> responseEntity = parkingController.unregisterParkingSession(unregisterParkingRequest);
         verify(parkingService, times(1)).unregisterParkingSession(unregisterParkingRequest);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Parking session ended successfully for license plate number: License1", responseEntity.getBody().getMessage());
+        assertEquals("Parking session ended successfully", responseEntity.getBody().getMessage());
     }
 }

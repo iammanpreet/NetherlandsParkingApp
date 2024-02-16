@@ -21,8 +21,9 @@ public class RegistrationObservationRecord {
     /**
      * Street Name (should be case sensitive, or else we should use enum with all street data)
      */
-    @Column(name = "street_name", nullable = false)
-    private String streetName;
+    @ManyToOne
+    @JoinColumn(name = "street_id")
+    private Street street;
     /**
      * Observation Date time of the parking of vehicle
      */
@@ -51,12 +52,12 @@ public class RegistrationObservationRecord {
         this.licensePlateNumber = licensePlateNumber;
     }
 
-    public String getStreetName() {
-        return streetName;
+    public Street getStreet() {
+        return street;
     }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
+    public void setStreet(Street street) {
+        this.street = street;
     }
 
     public LocalDateTime getObservationDate() {
