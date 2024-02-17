@@ -10,6 +10,8 @@ public class UnregisterParkingResponse {
     @NotBlank
     private BigDecimal parkingCost;
 
+    private String costCurrency = "EUR";
+
     private String message;
 
     public String getLicensePlateNumber() {

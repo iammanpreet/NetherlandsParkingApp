@@ -25,21 +25,13 @@ public class RegistrationObservationRepositoryTest {
         Street street = new Street();
         street.setName("Java");
         entityManager.persist(street);
-
-        // Create a new observation record with the saved street
         RegistrationObservationRecord observationRecord = new RegistrationObservationRecord();
         LocalDateTime observationDate = LocalDateTime.now().minusDays(2);
         observationRecord.setObservationDate(observationDate);
         observationRecord.setLicensePlateNumber("License1");
         observationRecord.setStreet(street);
-
-        // Save the observation record
         registrationObservationRepository.save(observationRecord);
-
-        // Retrieve all records
         List<RegistrationObservationRecord> savedRecords = registrationObservationRepository.findAll();
-
-        // Assert
         assertNotNull(savedRecords);
         assertEquals(1, savedRecords.size());
 
@@ -47,6 +39,6 @@ public class RegistrationObservationRepositoryTest {
         assertEquals(observationDate, savedRecord.getObservationDate());
         assertEquals("License1", savedRecord.getLicensePlateNumber());
         assertEquals("Java", savedRecord.getStreet().getName());
-        entityManager.clear();
+
     }
 }

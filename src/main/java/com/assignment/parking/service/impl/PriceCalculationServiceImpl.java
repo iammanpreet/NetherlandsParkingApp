@@ -27,7 +27,9 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
 
         BigDecimal cost = pricePerMinute.multiply(new BigDecimal(duration.toMinutes()));
 
-        return cost.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal costInEuros = cost.divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+
+        return costInEuros.setScale(2, RoundingMode.HALF_UP);
     }
 
     private Duration calculateParkingDuration(PriceCalculationRequest priceCalculationRequest) {

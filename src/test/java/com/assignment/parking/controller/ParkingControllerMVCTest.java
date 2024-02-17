@@ -8,6 +8,7 @@ import com.assignment.parking.model.request.RegisterParkingRequest;
 import com.assignment.parking.model.request.UnregisterParkingRequest;
 import com.assignment.parking.model.response.BaseResponse;
 import com.assignment.parking.service.ParkingService;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -33,13 +35,8 @@ public class ParkingControllerMVCTest extends BaseTest {
     @Mock
     private ParkingServiceImpl parkingService;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
 
-    private ObjectMapper objectMapper;
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        this.objectMapper = new ObjectMapper();
-    }
 
     @Test
     void testRegisterParkingSession() throws Exception {

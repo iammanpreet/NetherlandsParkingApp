@@ -1,5 +1,6 @@
 package com.assignment.parking.controller;
 
+import com.assignment.parking.BaseTest;
 import com.assignment.parking.model.request.RegistrationObservationRequest;
 import com.assignment.parking.service.RegistrationObservationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,9 +18,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-@SpringBootTest
 @AutoConfigureMockMvc
-public class RegistrationObservationControllerMVCTest {
+@SpringBootTest
+public class RegistrationObservationControllerMVCTest extends BaseTest {
 
     @Autowired
     private MockMvc mockMvc;
