@@ -64,5 +64,57 @@ class PriceCalculationServiceImplTest {
         assertEquals(BigDecimal.ZERO.doubleValue(), result.doubleValue()); // Zero minutes * $0.50/minute
         verify(streetService, times(1)).getPriceByStreetName(streetName);
     }
+
+    @Test
+    void calculateParkingCost_includingExceptions() {
+        when(streetService.getPriceByStreetName("java")).thenReturn(new BigDecimal("15"));
+        LocalDateTime startTime = LocalDateTime.of(2024, 2, 10, 12, 0);
+        LocalDateTime endTime = LocalDateTime.of(2024, 2, 13, 14, 30);
+        PriceCalculationRequest request = new PriceCalculationRequest();
+        request.setStreetName("java");
+        request.setStartTime(startTime);
+        request.setEndTime(endTime);
+
+        BigDecimal result = priceCalculationService.calculateParkingCost(request);
+
+        // Expected result: (15 * (28hours 30min  * 60) minutes) / 100 = 256.50
+        BigDecimal expectedResult = new BigDecimal("256.50");
+
+        assertEquals(expectedResult, result);
+     }
+
+    @Test
+    void calculateParkingCost_excludingExceptions() {
+        when(streetService.getPriceByStreetName("java")).thenReturn(new BigDecimal("15"));
+        LocalDateTime startTime = LocalDateTime.of(2024, 2, 10, 12, 0);
+        LocalDateTime endTime = LocalDateTime.of(2024, 2, 10, 14, 30);
+        PriceCalculationRequest request = new PriceCalculationRequest();
+        request.setStreetName("java");
+        request.setStartTime(startTime);
+        request.setEndTime(endTime);
+
+        BigDecimal result = priceCalculationService.calculateParkingCost(request);
+
+        // Expected result: (15 * (2hours 30min  * 60) minutes) / 100 = 22.50
+        BigDecimal expectedResult = new BigDecimal("22.50");
+
+        assertEquals(expectedResult, result);
+    }
+
+    @Test
+    void calculateParkingCost_FreeParkingOnSunday() {
+        when(streetService.getPriceByStreetName("java")).thenReturn(new BigDecimal("15"));
+        LocalDateTime startTime = LocalDateTime.of(2024, 2, 11, 12, 0); // Sunday
+        LocalDateTime endTime = LocalDateTime.of(2024, 2, 11, 14, 30);
+        PriceCalculationRequest request = new PriceCalculationRequest();
+        request.setStreetName("java");
+        request.setStartTime(startTime);
+        request.setEndTime(endTime);
+
+        BigDecimal result = priceCalculationService.calculateParkingCost(request);
+        // Expected result: 0.00 (free parking on Sunday)
+        BigDecimal expectedResult = BigDecimal.ZERO;
+        assertEquals(expectedResult.doubleValue(), result.doubleValue());
+    }
 }
 
