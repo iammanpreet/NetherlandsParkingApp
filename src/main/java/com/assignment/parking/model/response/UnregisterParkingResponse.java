@@ -37,4 +37,12 @@ public class UnregisterParkingResponse {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    public String getCostCurrency() {
+        return costCurrency;
+    }
+
+    public void setCostCurrency(String costCurrency) {
+        this.costCurrency = costCurrency;
+    }
 }
