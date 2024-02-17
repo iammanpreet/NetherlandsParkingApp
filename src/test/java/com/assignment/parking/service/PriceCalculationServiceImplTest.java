@@ -45,6 +45,22 @@ class PriceCalculationServiceImplTest {
         assertEquals(new BigDecimal("22.5").doubleValue(), result.doubleValue());
         verify(streetService, times(1)).getPriceByStreetName(streetName);
     }
+    @Test
+    void calculateParkingCost_InOddHours() {
+        String streetName = "JavaStreet";
+        LocalDateTime startTime = LocalDateTime.of(2024, 2, 16, 21, 0);
+        LocalDateTime endTime = LocalDateTime.of(2024, 2, 16, 21, 30);
+        BigDecimal pricePerMinute = new BigDecimal("15");
+
+        PriceCalculationRequest priceCalculationRequest = new PriceCalculationRequest();
+        priceCalculationRequest.setEndTime(endTime);
+        priceCalculationRequest.setStartTime(startTime);
+        priceCalculationRequest.setStreetName(streetName);
+        when(streetService.getPriceByStreetName(streetName)).thenReturn(pricePerMinute);
+        BigDecimal result = priceCalculationService.calculateParkingCost(priceCalculationRequest);
+        assertEquals(new BigDecimal("0").doubleValue(), result.doubleValue());
+        verify(streetService, times(1)).getPriceByStreetName(streetName);
+    }
 
     @Test
     void calculateParkingCost_ZeroDuration() {
