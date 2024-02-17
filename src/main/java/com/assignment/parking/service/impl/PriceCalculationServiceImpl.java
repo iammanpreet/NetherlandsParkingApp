@@ -45,25 +45,27 @@ public class PriceCalculationServiceImpl implements PriceCalculationService {
         return costInEuros.setScale(2, RoundingMode.HALF_UP);
     }
     private static Duration calculateFreeParkingHours(LocalDateTime startTime, LocalDateTime endTime) {
-        long totalDurationHours = ChronoUnit.HOURS.between(startTime, endTime);
-
         // Compute number of free hours for each day
         long freeHours = 0;
+        long freeMinutes = 0;
         LocalDateTime currentDateTime = null;
-        for (currentDateTime = startTime; currentDateTime.isBefore(endTime); currentDateTime = currentDateTime.plusHours(1)) {
+        for (currentDateTime = startTime; currentDateTime.isBefore(endTime.plusHours(1)); currentDateTime = currentDateTime.plusHours(1)) {
             DayOfWeek dayOfWeek = currentDateTime.getDayOfWeek();
             LocalTime currentTime = currentDateTime.toLocalTime();
 
             // Check if it's Sunday or falls within the nightly free parking hours
             if (dayOfWeek == DayOfWeek.SUNDAY || (currentTime.isAfter(LocalTime.of(21, 0)) || currentTime.compareTo(LocalTime.of(8, 0)) <=0)) {
-                freeHours++;
+                if(Duration.between(currentDateTime.minusHours(1),endTime).toMinutes() >= 60) {
+                    freeHours++;
+                } else{
+                    freeMinutes = Duration.between(endTime,currentDateTime).toMinutes();
+                }
             }
 
         }
-        if((currentDateTime.toLocalTime().isAfter(LocalTime.of(21, 0)) || currentDateTime.toLocalTime().compareTo(LocalTime.of(8, 0)) <=0) && Duration.between(currentDateTime,endTime).toMinutes() < 60){
-           return Duration.ofHours(freeHours).plusMinutes(Duration.between(currentDateTime,endTime).toMinutes());
-        }
-        return  Duration.ofHours(freeHours);
+
+
+        return  Duration.ofHours(freeHours).plusMinutes(freeMinutes);
     }
 
     private Duration calculateParkingDuration(LocalDateTime startTime, LocalDateTime endTime) {
