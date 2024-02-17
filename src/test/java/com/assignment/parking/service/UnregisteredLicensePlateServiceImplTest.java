@@ -1,10 +1,12 @@
 package com.assignment.parking.service;
 
 import com.assignment.parking.BaseTest;
+import com.assignment.parking.model.Street;
 import com.assignment.parking.model.UnregisteredLicensePlate;
 import com.assignment.parking.model.request.UnregisteredLicencePlateRequest;
 import com.assignment.parking.model.response.UnregisteredLicencePlateResponse;
 import com.assignment.parking.repository.UnregisteredLicensePlateRepository;
+import com.assignment.parking.service.impl.StreetServiceImpl;
 import com.assignment.parking.service.impl.UnregisteredLicensePlateServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,6 +26,8 @@ public class UnregisteredLicensePlateServiceImplTest extends BaseTest {
     @Mock
     private UnregisteredLicensePlateRepository unregisteredLicensePlateRepository;
 
+    @Mock
+    private StreetServiceImpl streetService;
     @InjectMocks
     private UnregisteredLicensePlateServiceImpl unregisteredLicensePlateService;
 
@@ -32,6 +36,8 @@ public class UnregisteredLicensePlateServiceImplTest extends BaseTest {
         UnregisteredLicencePlateRequest request = createUnregisteredPlateRequest();
         UnregisteredLicensePlate savedUnregisteredPlate = createUnregisteredPlate(request);
         when(unregisteredLicensePlateRepository.save(any())).thenReturn(savedUnregisteredPlate);
+        Street street = new Street();
+        when(streetService.getStreetByName(anyString())).thenReturn(Optional.of(street));
 
         UnregisteredLicencePlateResponse response = unregisteredLicensePlateService.saveUnregisteredLicensePlate(request);
 
@@ -48,6 +54,9 @@ public class UnregisteredLicensePlateServiceImplTest extends BaseTest {
     void testFindByIsReported_Success() {
         List<UnregisteredLicensePlate> unregisteredLicensePlates = createUnregisteredPlates();
         when(unregisteredLicensePlateRepository.findByIsReported(any())).thenReturn(unregisteredLicensePlates);
+        Street street = new Street();
+        street.setName("Java");
+        when(streetService.getStreetByName(anyString())).thenReturn(Optional.of(street));
 
         Optional<List<UnregisteredLicencePlateResponse>> responseListOptional = unregisteredLicensePlateService.findByIsReported("N");
 
@@ -80,15 +89,18 @@ public class UnregisteredLicensePlateServiceImplTest extends BaseTest {
     }
 
     private UnregisteredLicencePlateRequest createUnregisteredPlateRequest() {
-        return new UnregisteredLicencePlateRequest("License1", "Street1", LocalDateTime.now());
+        return new UnregisteredLicencePlateRequest("License1", "Java", LocalDateTime.now());
     }
 
     private UnregisteredLicensePlate createUnregisteredPlate(UnregisteredLicencePlateRequest request) {
         UnregisteredLicensePlate unregisteredPlate = new UnregisteredLicensePlate();
         unregisteredPlate.setLicensePlateNumber(request.getLicensePlateNumber());
-        unregisteredPlate.setStreetName(request.getStreetName());
         unregisteredPlate.setObservationDate(request.getObservationDate());
         unregisteredPlate.setUnregisteredId(1L);
+        Street street = new Street();
+        street.setName("Java");
+        street.setPricePerMinute(15);
+        unregisteredPlate.setStreet(street);
         return unregisteredPlate;
     }
 

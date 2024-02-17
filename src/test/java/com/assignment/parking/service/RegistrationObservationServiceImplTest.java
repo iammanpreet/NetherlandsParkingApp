@@ -1,7 +1,9 @@
 package com.assignment.parking.service;
 
 import com.assignment.parking.BaseTest;
+import com.assignment.parking.exception.NotFoundException;
 import com.assignment.parking.model.RegistrationObservationRecord;
+import com.assignment.parking.model.Street;
 import com.assignment.parking.model.request.RegistrationObservationRequest;
 import com.assignment.parking.repository.RegistrationObservationRepository;
 import com.assignment.parking.service.impl.RegistrationObservationServiceImpl;
@@ -30,6 +32,9 @@ public class RegistrationObservationServiceImplTest extends BaseTest {
     private ParkingService parkingService;
 
     @Mock
+    private StreetService streetService;
+
+    @Mock
     private UnregisteredLicensePlateService unregisteredLicensePlateService;
 
     @InjectMocks
@@ -46,6 +51,8 @@ public class RegistrationObservationServiceImplTest extends BaseTest {
         when(registrationObservationRepository.saveAll(anyList())).thenReturn(createObservationRecords(observationRequests));
         when(parkingService.findByLicensePlateNumberAndStreetNameAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any()))
                 .thenReturn(Optional.of(createParkingRegistrationResponse(observationRequests.get(0))));
+        Street street = new Street();
+        when(streetService.getStreetByName(anyString())).thenReturn(Optional.of(street));
 
         assertDoesNotThrow(() -> registrationObservationService.saveRegistrationObservations(observationRequests));
 
@@ -59,6 +66,8 @@ public class RegistrationObservationServiceImplTest extends BaseTest {
         when(registrationObservationRepository.saveAll(anyList())).thenReturn(createObservationRecords(observationRequests));
         when(parkingService.findByLicensePlateNumberAndStreetNameAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any()))
                 .thenReturn(Optional.empty());
+        Street street = new Street();
+        when(streetService.getStreetByName(anyString())).thenReturn(Optional.of(street));
 
         assertDoesNotThrow(() -> registrationObservationService.saveRegistrationObservations(observationRequests));
 
@@ -78,11 +87,22 @@ public class RegistrationObservationServiceImplTest extends BaseTest {
         for (RegistrationObservationRequest request : observationRequests) {
             RegistrationObservationRecord record = new RegistrationObservationRecord();
             record.setObservationDate(request.getObservationDate());
-            record.setStreetName(request.getStreetName());
             record.setLicensePlateNumber(request.getLicensePlateNumber());
             observationRecords.add(record);
         }
         return observationRecords;
+    }
+    @Test
+    void testSaveRegistrationObservations_StreetNotFound() {
+        List<RegistrationObservationRequest> observationRequests = new ArrayList<>();
+        observationRequests.add(new RegistrationObservationRequest("License1", "Street1", LocalDateTime.now()));
+        when(streetService.getStreetByName(anyString())).thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> registrationObservationService.saveRegistrationObservations(observationRequests));
+
+        assertEquals("Street not found", exception.getMessage());
+        verify(registrationObservationRepository, never()).saveAll(anyList());
     }
 
     private ParkingRegistrationResponse createParkingRegistrationResponse(RegistrationObservationRequest observationRequest) {

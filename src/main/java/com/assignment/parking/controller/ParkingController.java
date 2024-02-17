@@ -2,6 +2,7 @@ package com.assignment.parking.controller;
 
 import com.assignment.parking.model.request.UnregisterParkingRequest;
 import com.assignment.parking.model.response.BaseResponse;
+import com.assignment.parking.model.response.UnregisterParkingResponse;
 import com.assignment.parking.service.ParkingService;
 import com.assignment.parking.model.request.RegisterParkingRequest;
 import com.assignment.parking.service.impl.ParkingServiceImpl;
@@ -47,9 +48,9 @@ public class ParkingController {
             @ApiResponse(responseCode = "400", description = "Invalid request parameters")
     })
     @PostMapping(value = "/unregisterParkingSession", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<BaseResponse> unregisterParkingSession(@RequestBody @Valid UnregisterParkingRequest unregisterParkingRequest) {
-        parkingService.unregisterParkingSession(unregisterParkingRequest);
+    public ResponseEntity<UnregisterParkingResponse> unregisterParkingSession(@RequestBody @Valid UnregisterParkingRequest unregisterParkingRequest) {
+        UnregisterParkingResponse unregisterParkingResponse = parkingService.unregisterParkingSession(unregisterParkingRequest);
         logger.info("Parking successfully unregistered for license Plate: {}", unregisterParkingRequest.getLicensePlateNumber());
-        return ResponseEntity.ok().body(new BaseResponse(String.format("Parking session ended successfully for license plate number: %s", unregisterParkingRequest.getLicensePlateNumber())));
+        return ResponseEntity.ok().body(unregisterParkingResponse);
     }
 }

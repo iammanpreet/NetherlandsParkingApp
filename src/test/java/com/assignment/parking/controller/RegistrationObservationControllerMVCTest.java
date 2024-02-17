@@ -1,5 +1,6 @@
 package com.assignment.parking.controller;
 
+import com.assignment.parking.BaseTest;
 import com.assignment.parking.model.request.RegistrationObservationRequest;
 import com.assignment.parking.service.RegistrationObservationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 @AutoConfigureMockMvc
 @SpringBootTest
-public class RegistrationObservationControllerMVCTest {
+public class RegistrationObservationControllerMVCTest extends BaseTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -33,7 +34,7 @@ public class RegistrationObservationControllerMVCTest {
     @Test
     void testSaveRegistrationObservations() throws Exception {
         List<RegistrationObservationRequest> observations = Collections.singletonList(
-                new RegistrationObservationRequest("Licens1","Street1", LocalDateTime.now().minusDays(2))
+                new RegistrationObservationRequest("Licens1","Java", LocalDateTime.now().minusDays(2))
         );
         Mockito.doNothing().when(registrationObservationService).saveRegistrationObservations(Mockito.anyList());
         mockMvc.perform(MockMvcRequestBuilders.post("/api/observation/saveRegistrationObservations")

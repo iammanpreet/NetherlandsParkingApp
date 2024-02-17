@@ -18,7 +18,6 @@ public class UnregisteredVehicleCheckSchedulerTest extends BaseTest {
 
     @Mock
     private UnregisteredLicensePlateService unregisteredLicensePlateService;
-
     @Mock
     private CsvConfig csvConfig;
     @InjectMocks

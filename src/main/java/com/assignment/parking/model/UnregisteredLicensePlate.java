@@ -22,8 +22,9 @@ public class UnregisteredLicensePlate {
     /**
      * street name
      */
-    @Column(name = "street_name", nullable = false)
-    private String streetName;
+    @ManyToOne
+    @JoinColumn(name = "street_id")
+    private Street street;
     /**
      * Observation date time
      */
@@ -51,12 +52,12 @@ public class UnregisteredLicensePlate {
         this.licensePlateNumber = licensePlateNumber;
     }
 
-    public String getStreetName() {
-        return streetName;
+    public Street getStreet() {
+        return street;
     }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
+    public void setStreet(Street street) {
+        this.street = street;
     }
 
     public LocalDateTime getObservationDate() {

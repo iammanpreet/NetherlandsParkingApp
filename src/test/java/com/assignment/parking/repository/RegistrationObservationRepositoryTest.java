@@ -1,6 +1,8 @@
 package com.assignment.parking.repository;
 
 import com.assignment.parking.model.RegistrationObservationRecord;
+import com.assignment.parking.model.Street;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,15 +18,18 @@ public class RegistrationObservationRepositoryTest {
 
     @Autowired
     private RegistrationObservationRepository registrationObservationRepository;
-
+    @Autowired
+    private EntityManager entityManager;
     @Test
     public void saveRegistrationObservationRecord_ShouldSaveAndRetrieveRecord() {
+        Street street = new Street();
+        street.setName("Java");
+        entityManager.persist(street);
         RegistrationObservationRecord observationRecord = new RegistrationObservationRecord();
         LocalDateTime observationDate = LocalDateTime.now().minusDays(2);
         observationRecord.setObservationDate(observationDate);
-        observationRecord.setStreetName("Street1");
         observationRecord.setLicensePlateNumber("License1");
-
+        observationRecord.setStreet(street);
         registrationObservationRepository.save(observationRecord);
         List<RegistrationObservationRecord> savedRecords = registrationObservationRepository.findAll();
         assertNotNull(savedRecords);
@@ -32,8 +37,8 @@ public class RegistrationObservationRepositoryTest {
 
         RegistrationObservationRecord savedRecord = savedRecords.get(0);
         assertEquals(observationDate, savedRecord.getObservationDate());
-        assertEquals("Street1", savedRecord.getStreetName());
         assertEquals("License1", savedRecord.getLicensePlateNumber());
+        assertEquals("Java", savedRecord.getStreet().getName());
+
     }
 }
-
