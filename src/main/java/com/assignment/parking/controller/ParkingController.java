@@ -5,7 +5,6 @@ import com.assignment.parking.model.response.BaseResponse;
 import com.assignment.parking.model.response.UnregisterParkingResponse;
 import com.assignment.parking.service.ParkingService;
 import com.assignment.parking.model.request.RegisterParkingRequest;
-import com.assignment.parking.service.impl.ParkingServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

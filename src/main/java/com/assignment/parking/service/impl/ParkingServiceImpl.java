@@ -10,7 +10,6 @@ import com.assignment.parking.model.ParkingRecord;
 import com.assignment.parking.model.request.ParkingRegistrationRequest;
 import com.assignment.parking.model.request.RegisterParkingRequest;
 import com.assignment.parking.model.response.ParkingRegistrationResponse;
-import com.assignment.parking.model.response.PriceCalculationResponse;
 import com.assignment.parking.model.response.UnregisterParkingResponse;
 import com.assignment.parking.repository.ParkingRepository;
 import com.assignment.parking.service.ParkingService;

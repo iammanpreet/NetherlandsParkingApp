@@ -1,7 +1,5 @@
 package com.assignment.parking.service.impl;
-import com.assignment.parking.model.ParkingRecord;
 import com.assignment.parking.model.request.PriceCalculationRequest;
-import com.assignment.parking.schedule.UnregisteredVehicleCheckScheduler;
 import com.assignment.parking.service.PriceCalculationService;
 import com.assignment.parking.service.StreetService;
 import org.slf4j.Logger;
@@ -11,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.*;
-import java.time.temporal.ChronoUnit;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.DayOfWeek;
 
 @Service
 public class PriceCalculationServiceImpl implements PriceCalculationService {
